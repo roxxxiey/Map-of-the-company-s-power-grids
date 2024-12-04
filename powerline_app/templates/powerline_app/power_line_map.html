@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Карта ЛЭП</title>
+
+    {% load static %}
+
+    <link rel="stylesheet" href="{% static 'powerline_app/css/styles.css' %}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        Карта ЛЭП
+    </header>
+
+    <!-- Карта -->
+    <div id="map"></div>
+
+    <!-- Footer -->
+    <footer>
+        <p>Контактная информация: <a href="mailto:info@lepcompany.com" style="color: white;">info@lepcompany.com</a> | Телефон: +7 (495) 123-45-67</p>
+    </footer>
+
+    <script>
+        // Инициализация карты
+        var map = L.map('map').setView([55.7558, 37.6173], 10); // Москва
+
+        // Настройка слоя OpenStreetMap
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+        }).addTo(map);
+
+        // Получение данных о линиях из шаблона Django
+        const lines = JSON.parse('{{ lines|escapejs }}');
+
+        // Добавление линий на карту
+        lines.forEach(line => {
+            const polyline = L.polyline(line.coordinates, { color: 'blue' });
+            polyline.bindPopup(`<b>${line.name}</b><br>Напряжение: ${line.voltage}<br>Состояние: ${line.condition}`);
+            polyline.addTo(map);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+/* Стиль для header */
+header {
+    background-color: #4CAF50;
+    color: white;
+    padding: 15px 0;
+    text-align: center;
+    font-size: 24px;
+}
+
+/* Стиль для футера */
+footer {
+    background-color: #333;
+    color: white;
+    padding: 10px 0;
+    text-align: center;
+    font-size: 14px;
+}
+
+/* Убираем отступы у текста в футере */
+footer p {
+    margin: 0;
+}
+
+/* Обеспечиваем, что футер всегда будет внизу страницы */
+body {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    margin: 0;
+}
+
+/* Стиль для карты */
+#map {
+    flex-grow: 1; /* Карта займет все доступное пространство */
+    width: 100%;
+}
+
+/* Стиль для ссылки в футере */
+footer a {
+    color: white;
+}
