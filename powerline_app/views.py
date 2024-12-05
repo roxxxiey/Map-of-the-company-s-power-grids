@@ -1,6 +1,6 @@
 from django.shortcuts import render
-import json
 from .models import PowerLine
+import json
 
 def powerline_map(request):
     lines = PowerLine.objects.all()

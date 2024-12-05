@@ -3,46 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Карта ЛЭП</title>
-
-    {% load static %}
-
-    <link rel="stylesheet" href="{% static 'powerline_app/css/styles.css' %}">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
+    <title>Карта ЛЭП - Томск</title>
+    <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU&apikey=YOUR_API_KEY" type="text/javascript"></script>
+    <style>
+        /* Устанавливаем размеры карты */
+        #map {
+            width: 100%;
+            height: 750px;
+        }
+        /* Стили для header */
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 0;
+            text-align: center;
+            font-size: 24px;
+        }
+        /* Стили для футера */
+        footer {
+            background-color: #333;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+            font-size: 14px;
+        }
+        footer p {
+            margin: 0;
+        }
+    </style>
 </head>
 <body>
     <!-- Header -->
     <header>
-        Карта ЛЭП
+        Карта ЛЭП - Томск
     </header>
 
     <!-- Карта -->
     <div id="map"></div>
 
+    <script type="text/javascript">
+        ymaps.ready(function() {
+            // Создаем карту с центром в Томске
+            var map = new ymaps.Map("map", {
+                center: [56.49330096298038, 85.01134872436525], // Центр карты (Томск)
+                zoom: 12
+            });
+
+            // Получаем данные о линиях из Django-шаблона
+            var linesData = {{ lines|safe }};
+
+            // Для каждой линии создаем полилинию
+            linesData.forEach(function(line) {
+                var coordinates = line.coordinates;
+                var color;
+
+                // Логика выбора цвета в зависимости от напряжения
+                switch (line.voltage) {
+                    case 'low':
+                        color = '#ff0000'; // Красный для низкого напряжения
+                        break;
+                    case 'medium':
+                        color = '#ff9900'; // Оранжевый для среднего напряжения
+                        break;
+                    case 'high':
+                        color = '#00b7ff'; // Синий для высокого напряжения
+                        break;
+                    default:
+                        color = '#00b7ff'; // Цвет по умолчанию
+                }
+
+                // Создаем полилинию с выбранным цветом
+                var polyline = new ymaps.Polyline(coordinates, {}, {
+                    strokeColor: color,
+                    strokeWidth: 4
+                });
+
+                // Добавляем полилинию на карту
+                map.geoObjects.add(polyline);
+            });
+        });
+    </script>
+
     <!-- Footer -->
     <footer>
         <p>Контактная информация: <a href="mailto:info@lepcompany.com" style="color: white;">info@lepcompany.com</a> | Телефон: +7 (495) 123-45-67</p>
     </footer>
-
-    <script>
-        // Инициализация карты
-        var map = L.map('map').setView([55.7558, 37.6173], 10); // Москва
-
-        // Настройка слоя OpenStreetMap
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-        }).addTo(map);
-
-        // Получение данных о линиях из шаблона Django
-        const lines = JSON.parse('{{ lines|escapejs }}');
-
-        // Добавление линий на карту
-        lines.forEach(line => {
-            const polyline = L.polyline(line.coordinates, { color: 'blue' });
-            polyline.bindPopup(`<b>${line.name}</b><br>Напряжение: ${line.voltage}<br>Состояние: ${line.condition}`);
-            polyline.addTo(map);
-        });
-    </script>
 </body>
 </html>
