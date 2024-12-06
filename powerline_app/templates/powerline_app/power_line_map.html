@@ -5,41 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Карта ЛЭП - Томск</title>
     <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU&apikey=YOUR_API_KEY" type="text/javascript"></script>
-    <style>
-        /* Устанавливаем размеры карты */
-        #map {
-            width: 100%;
-            height: 750px;
-        }
-        /* Стили для header */
-        header {
-            background-color: #4CAF50;
-            color: white;
-            padding: 15px 0;
-            text-align: center;
-            font-size: 24px;
-        }
-        /* Стили для футера */
-        footer {
-            background-color: #333;
-            color: white;
-            padding: 10px 0;
-            text-align: center;
-            font-size: 14px;
-        }
-        footer p {
-            margin: 0;
-        }
-    </style>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'powerline_app/css/styles.css'%}">
 </head>
 <body>
     <!-- Header -->
     <header>
-        Карта ЛЭП - Томск
+        <a href="{% url 'powerline_map' %}">Карта ЛЭП</a> |
+        <a href="{% url 'about' %}">О проекте</a>
     </header>
 
     <!-- Карта -->
     <div id="map"></div>
+
+    <!-- Текст с названием линии -->
+    <div id="line-name" class="line-name"></div>
 
     <script type="text/javascript">
         ymaps.ready(function() {
@@ -52,7 +32,9 @@
             // Получаем данные о линиях из Django-шаблона
             var linesData = {{ lines|safe }};
 
-            // Для каждой линии создаем полилинию
+            // Получаем контейнер для названия линии
+            var lineNameElement = document.getElementById("line-name");
+
             linesData.forEach(function(line) {
                 var coordinates = line.coordinates;
                 var color;
@@ -60,13 +42,13 @@
                 // Логика выбора цвета в зависимости от напряжения
                 switch (line.voltage) {
                     case 'low':
-                        color = '#ff0000'; // Красный для низкого напряжения
+                        color = '#f7ff00'; // Красный для низкого напряжения
                         break;
                     case 'medium':
                         color = '#ff9900'; // Оранжевый для среднего напряжения
                         break;
                     case 'high':
-                        color = '#00b7ff'; // Синий для высокого напряжения
+                        color = '#ff0000'; // Синий для высокого напряжения
                         break;
                     default:
                         color = '#00b7ff'; // Цвет по умолчанию
@@ -80,6 +62,19 @@
 
                 // Добавляем полилинию на карту
                 map.geoObjects.add(polyline);
+
+                // Создаем обработчик для показа названия линии
+                polyline.events.add('mouseenter', function (e) {
+                    var position = e.get('pagePixels'); // Получаем пиксельные координаты мыши
+                    lineNameElement.style.left = position[0] + "px";
+                    lineNameElement.style.top = position[1] + "px";
+                    lineNameElement.style.display = "block";  // Показываем текст
+                    lineNameElement.textContent = line.name +" "+ line.voltage +" - voltage";  // Выводим название линии
+                });
+
+                polyline.events.add('mouseleave', function () {
+                    lineNameElement.style.display = "none";  // Скрываем текст, когда мышь покидает полилинию
+                });
             });
         });
     </script>

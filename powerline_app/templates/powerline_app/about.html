@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>О проекте</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'powerline_app/css/about.css'%}">
+</head>
+<body>
+    <header>
+        <a href="{% url 'powerline_map' %}">Карта ЛЭП</a> | О проекте
+    </header>
+    <div class="content">
+        <h1>О проекте</h1>
+        <p>Этот проект предназначен для визуализации линий электропередач в городе Томске. Он позволяет:</p>
+        <ul>
+            <li>Просматривать линии электропередач на карте.</li>
+            <li>Получать информацию о каждой линии при наведении.</li>
+            <li>Разделять линии по категориям напряжения.</li>
+        </ul>
+        <p>Проект разработан с использованием Django и Яндекс.Карт.</p>
+    </div>
+
+    <footer>
+        <p>Контактная информация: <a href="mailto:info@lepcompany.com" style="color: white;">info@lepcompany.com</a> | Телефон: +7 (495) 123-45-67</p>
+    </footer>
+</body>
+</html>

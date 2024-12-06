@@ -14,3 +14,7 @@ def powerline_map(request):
 
     # Передаем данные в шаблон
     return render(request, 'powerline_app/power_line_map.html', {'lines': json.dumps(lines_data)})
+
+def about_view(request):
+    # Логика для страницы "О проекте"
+    return render(request, 'powerline_app/about.html')
