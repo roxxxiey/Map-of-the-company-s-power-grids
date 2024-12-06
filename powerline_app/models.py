@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class PowerLine(models.Model):
     VOLTAGE_CHOICES = [
         ('low', 'Low Voltage'),

@@ -1,14 +1,12 @@
 from pathlib import Path
 
-# Базовая директория проекта
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Безопасность
 SECRET_KEY = 'замените-на-секретный-ключ'
 DEBUG = True
 ALLOWED_HOSTS = []
 
-# Установленные приложения
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -16,7 +14,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'powerline_app',  # Ваше приложение
+    'powerline_app',
 ]
 
 MIDDLEWARE = [
@@ -49,7 +47,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'powerline_project.wsgi.application'
 
-# База данных
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -57,7 +55,7 @@ DATABASES = {
     }
 }
 
-# Пароли
+
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -73,13 +71,13 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# Локализация
+
 LANGUAGE_CODE = 'ru-ru'
 TIME_ZONE = 'Europe/Moscow'
 USE_I18N = True
 USE_TZ = True
 
-# Файлы
+
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 

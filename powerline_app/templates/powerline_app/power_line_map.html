@@ -23,23 +23,19 @@
 
     <script type="text/javascript">
         ymaps.ready(function() {
-            // Создаем карту с центром в Томске
             var map = new ymaps.Map("map", {
                 center: [56.49330096298038, 85.01134872436525], // Центр карты (Томск)
                 zoom: 12
             });
 
-            // Получаем данные о линиях из Django-шаблона
             var linesData = {{ lines|safe }};
 
-            // Получаем контейнер для названия линии
             var lineNameElement = document.getElementById("line-name");
 
             linesData.forEach(function(line) {
                 var coordinates = line.coordinates;
                 var color;
 
-                // Логика выбора цвета в зависимости от напряжения
                 switch (line.voltage) {
                     case 'low':
                         color = '#f7ff00'; // Красный для низкого напряжения
@@ -54,26 +50,23 @@
                         color = '#00b7ff'; // Цвет по умолчанию
                 }
 
-                // Создаем полилинию с выбранным цветом
                 var polyline = new ymaps.Polyline(coordinates, {}, {
                     strokeColor: color,
                     strokeWidth: 4
                 });
 
-                // Добавляем полилинию на карту
                 map.geoObjects.add(polyline);
 
-                // Создаем обработчик для показа названия линии
                 polyline.events.add('mouseenter', function (e) {
                     var position = e.get('pagePixels'); // Получаем пиксельные координаты мыши
                     lineNameElement.style.left = position[0] + "px";
                     lineNameElement.style.top = position[1] + "px";
-                    lineNameElement.style.display = "block";  // Показываем текст
-                    lineNameElement.textContent = line.name +" "+ line.voltage +" - voltage";  // Выводим название линии
+                    lineNameElement.style.display = "block";
+                    lineNameElement.textContent = line.name +" "+ line.voltage +" - voltage";
                 });
 
                 polyline.events.add('mouseleave', function () {
-                    lineNameElement.style.display = "none";  // Скрываем текст, когда мышь покидает полилинию
+                    lineNameElement.style.display = "none";
                 });
             });
         });
